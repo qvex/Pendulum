@@ -13,12 +13,41 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-	
+	//constants
+	float dt = 1.0f / 60.0f;
+	float mass = 0.1f;
+	float rubberLen = 200.0f;
+	float k = 0.5f;
+	ofPoint g(0.0f, 9.0f);
+
+	//computing Hooke's force
+	ofPoint delta = pos - pos0;
+	float len = delta.length();
+	float hookeValue = k * (len - rubberLen);
+	delta.normalize();
+	ofPoint hookeForce = delta * (-hookeValue);
+
+	//Update velocity and pos
+	ofPoint force = hookeForce + g;
+	ofPoint a = force / mass;
+	vel += a*dt;
+	pos += vel * dt;
+
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+	//Set white background
+	ofBackground(255, 255, 255);
 
+	//draw rubber as a blue line
+	ofSetColor(0, 0, 255);
+	ofLine(pos0.x, pos0.y, pos.x, pos.y);
+
+	//Draw ball as a real circle
+	ofSetColor(255, 0, 0);
+	ofFill();
+	ofCircle(pos.x, pos.y, 20);
 }
 
 //--------------------------------------------------------------
